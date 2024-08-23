@@ -5,8 +5,8 @@
 1. Clone the repository:
 
     ```bash
-    git clone <repository-url>
-    cd telegram-web-server-bot
+    git clone https://github.com/Devansh0012/AageBot.git
+    cd AageBot
     ```
 
 2. Create a virtual environment and install dependencies:
@@ -42,4 +42,10 @@
 
 ## Bot Username
 
-`<Your_Bot_Username>`
+`Aaagee_bot`
+
+## Using Through Heroku
+
+1. Open the following link: ```https://aagebot-e7c002fc374d.herokuapp.com/```
+2. Open the telegram bot using the link on the website
+3. Start the bot and use `/create` to see the unique link id.

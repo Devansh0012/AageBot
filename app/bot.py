@@ -3,10 +3,9 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 import os
 from uuid import uuid4
 
-# Assuming you have a function to store the user link mapping
 def store_user_link(user_id, uuid):
-    # Store the user ID and UUID in the database
-    pass
+    with open("user_links.txt", "a") as file:
+        file.write(f"{user_id},{uuid}\n")
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -15,7 +14,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text("Welcome to AageBot! Use /create to get your unique link.")
 
 async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    print(update)  # Debugging: Print the entire update object
+    print(update)
     if update.message is None:
         print("No message found in the update")
         return
@@ -39,5 +38,4 @@ if __name__ == '__main__':
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("create", create))
 
-    # Start the bot
     app.run_polling()
