@@ -1,62 +1,43 @@
-import uuid
-import sqlite3
-# from telegram import Update
-# from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
-
-# async def create(update: Update, context):
-#     user_id = update.message.from_user.id
-#     uuid_id = str(uuid.uuid4())
-    
-#     conn = sqlite3.connect('user_links.db')
-#     cursor = conn.cursor()
-#     cursor.execute("INSERT INTO UserLink (id, telegram_user_id) VALUES (?, ?)", (uuid_id, user_id))
-#     conn.commit()
-#     conn.close()
-
-#     await update.message.reply_text(f"Your unique link: https://aagebot-e7c002fc374d.herokuapp.com/{uuid_id}")
-
-# async def start(update: Update, context):
-#     await update.message.reply_text("Use /create to generate your unique link.")
-
-# if __name__ == '__main__':
-#     app = ApplicationBuilder().token("7018500770:AAFz1dkDaJxDRfG2DsC3jg65XcAL8i-EMs8").build()
-
-#     app.add_handler(CommandHandler("start", start))
-#     app.add_handler(CommandHandler("create", create))
-
-#     app.run_polling()
-
-import os
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
+import os
+from uuid import uuid4
 
-async def start(update: Update, context):
+# Assuming you have a function to store the user link mapping
+def store_user_link(user_id, uuid):
+    # Store the user ID and UUID in the database
+    pass
+
+
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if update.message is None:
+        return
     await update.message.reply_text("Welcome to AageBot! Use /create to get your unique link.")
 
-async def create(update: Update, context):
-    user_id = update.message.from_user.id
-    uuid_id = str(uuid.uuid4())
-    
-    conn = sqlite3.connect('user_links.db')
-    cursor = conn.cursor()
-    cursor.execute("INSERT INTO UserLink (id, telegram_user_id) VALUES (?, ?)", (uuid_id, user_id))
-    conn.commit()
-    conn.close()
+async def create(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    print(update)  # Debugging: Print the entire update object
+    if update.message is None:
+        print("No message found in the update")
+        return
 
-    await update.message.reply_text(f"Your unique link: https://aagebot-e7c002fc374d.herokuapp.com/{uuid_id}")
+
+    user_id = update.message.from_user.id
+    uuid = str(uuid4())
+    
+    store_user_link(user_id, uuid)
+    
+    link = f"https://aagebot-e7c002fc374d.herokuapp.com/link/{uuid}"
+    await update.message.reply_text(f"Your unique link is: {link}")
 
 if __name__ == '__main__':
-    app = ApplicationBuilder().token(os.getenv("7018500770:AAFz1dkDaJxDRfG2DsC3jg65XcAL8i-EMs8")).build()
+    token = os.getenv("TELEGRAM_BOT_TOKEN")
+    if not token:
+        raise ValueError("No Telegram bot token found. Please set the TELEGRAM_BOT_TOKEN environment variable.")
+
+    app = ApplicationBuilder().token(token).build()
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("create", create))
 
-    # Set webhook
-    HEROKU_APP_NAME = "aagebot-e7c002fc374d"
-    PORT = int(os.environ.get('PORT', 5000))
-    app.run_webhook(
-        listen="0.0.0.0",
-        port=PORT,
-        url_path=os.getenv("7018500770:AAFz1dkDaJxDRfG2DsC3jg65XcAL8i-EMs8"),
-        webhook_url=f"https://{HEROKU_APP_NAME}.herokuapp.com/{os.getenv('7018500770:AAFz1dkDaJxDRfG2DsC3jg65XcAL8i-EMs8')}"
-    )
+    # Start the bot
+    app.run_polling()
