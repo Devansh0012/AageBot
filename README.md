@@ -49,3 +49,4 @@
 1. Open the following link: ```https://aagebot-e7c002fc374d.herokuapp.com/```
 2. Open the telegram bot using the link on the website
 3. Start the bot and use `/create` to see the unique link id.
+4. The bot is not hosted yet thus you need to run the bot locally on your system using `python -m app.bot` and then open the telegram bot to generate the link.
