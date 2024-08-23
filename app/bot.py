@@ -13,7 +13,7 @@ async def create(update: Update, context):
     conn.commit()
     conn.close()
 
-    await update.message.reply_text(f"Your unique link: http://localhost:5000/link/{uuid_id}")
+    await update.message.reply_text(f"Your unique link: https://aagebot-e7c002fc374d.herokuapp.com/{uuid_id}")
 
 async def start(update: Update, context):
     await update.message.reply_text("Use /create to generate your unique link.")
